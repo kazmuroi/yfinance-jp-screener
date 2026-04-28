@@ -6,3 +6,15 @@ node_modules
 .claudecodes
 .serena
 __pycache__
+
+stock_list/stocks_*.json
+!stock_list/*sample.json
+!stock_list/us_stocks_all.json
+stock_list/stocks_all.json
+stock_list/us_stocks_*.json
+stock_list/*.log
+stock_list/*.xls
+stock_list/*.xlsx
+stock_list/Export/*
+!stock_list/Export/.keep
+.env

@@ -22,17 +22,37 @@ echo "=============================================="
 echo "MARKET=$MARKET  STOCK_FILE=$STOCK_FILE  CHUNK_SIZE=$CHUNK_SIZE"
 echo "=============================================="
 
+pids=""
+
 if [ "$MARKET" = "US" ]; then
   echo "🇺🇸 US stock list and data fetch..."
   python get_us_stocklist.py
   python split_stocks.py --input us_stocks_all.json --size "$CHUNK_SIZE"
-  python sumalize.py "$STOCK_FILE"
+  list=$(ls us_stocks_*.json | egrep 'stocks_[0-9]+.json' | xargs)
+  for json in ${list}
+  do
+    python sumalize.py "${json}" &
+    pids="${pids} $!"
+  done
+  for pid in ${pids}
+  do
+    wait ${pid}
+  done
   python combine_latest_csv.py --market-type US
 else
   echo "🇯🇵 JP stock list and data fetch..."
   python get_jp_stocklist.py
   python split_stocks.py --input stocks_all.json --size "$CHUNK_SIZE"
-  python sumalize.py "$STOCK_FILE"
+  list=$(ls stocks_*.json | egrep 'stocks_[0-9]+.json' | xargs)
+  for json in ${list}
+  do
+    python sumalize.py "${json}" &
+    pids="${pids} $!"
+  done
+  for pid in ${pids}
+  do
+    wait ${pid}
+  done
   python combine_latest_csv.py --market-type JP
 fi
 

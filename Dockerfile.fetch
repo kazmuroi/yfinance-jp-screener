@@ -9,8 +9,11 @@ WORKDIR /app
 # システムパッケージ更新と必要なツールをインストール
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+    coreutils \
+    findutils \
     gcc \
     g++ \
+    grep \
     && rm -rf /var/lib/apt/lists/*
 
 # Pythonの依存関係をコピーしてインストール
@@ -34,6 +37,3 @@ USER stockuser
 # 環境変数: MARKET=JP|US, STOCK_FILE未指定時は stocks_1.json(JP) / us_stocks_1.json(US)
 ENV MARKET=JP
 ENV CHUNK_SIZE=1000
-
-# デフォルトコマンド（run_fetch.sh が市場に応じてリスト取得→分割→収集→結合）
-CMD ["sh", "./run_fetch.sh"]
