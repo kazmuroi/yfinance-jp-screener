@@ -89,6 +89,27 @@ const initialFilters: SearchFilters = {
   netCashMax: null,
   netCashRatioMin: null,
   netCashRatioMax: null,
+  grahamMarginOfSafetyMin: null,
+  grahamMarginOfSafetyMax: null,
+  perPbrMin: null,
+  perPbrMax: null,
+  currentRatioMin: null,
+  currentRatioMax: null,
+  ncavRatioMin: null,
+  ncavRatioMax: null,
+};
+
+/** グレアムの古典的スクリーニング基準（プリセット）
+ * - PER×PBR ≤ 22.5（グレアムの複合バリュエーション基準）
+ * - 流動比率 ≥ 2.0倍（財務健全性の目安）
+ * - NCAV比率 ≥ 150%（時価総額が正味流動資産の2/3以下＝ネットネット株）
+ * - 安全余裕率(グレアム数) ≥ 0%（理論株価を下回っていれば割安）
+ */
+const GRAHAM_PRESET: Partial<SearchFilters> = {
+  perPbrMax: 22.5,
+  currentRatioMin: 2,
+  ncavRatioMin: 150,
+  grahamMarginOfSafetyMin: 0,
 };
 
 export const useFilters = (data: StockData[]) => {
@@ -687,6 +708,86 @@ export const useFilters = (data: StockData[]) => {
         return false;
       }
 
+      // 安全余裕率(グレアム数)フィルター（%）（データがnull/undefinedの場合は含める）
+      if (
+        filters.grahamMarginOfSafetyMin !== null &&
+        stock["安全余裕率(グレアム数)"] !== null &&
+        stock["安全余裕率(グレアム数)"] !== undefined &&
+        typeof stock["安全余裕率(グレアム数)"] === "number" &&
+        stock["安全余裕率(グレアム数)"] < filters.grahamMarginOfSafetyMin / 100
+      ) {
+        return false;
+      }
+      if (
+        filters.grahamMarginOfSafetyMax !== null &&
+        stock["安全余裕率(グレアム数)"] !== null &&
+        stock["安全余裕率(グレアム数)"] !== undefined &&
+        typeof stock["安全余裕率(グレアム数)"] === "number" &&
+        stock["安全余裕率(グレアム数)"] > filters.grahamMarginOfSafetyMax / 100
+      ) {
+        return false;
+      }
+
+      // PER×PBRフィルター（倍率そのまま比較、データがnull/undefinedの場合は含める）
+      if (
+        filters.perPbrMin !== null &&
+        stock["PER×PBR"] !== null &&
+        stock["PER×PBR"] !== undefined &&
+        typeof stock["PER×PBR"] === "number" &&
+        stock["PER×PBR"] < filters.perPbrMin
+      ) {
+        return false;
+      }
+      if (
+        filters.perPbrMax !== null &&
+        stock["PER×PBR"] !== null &&
+        stock["PER×PBR"] !== undefined &&
+        typeof stock["PER×PBR"] === "number" &&
+        stock["PER×PBR"] > filters.perPbrMax
+      ) {
+        return false;
+      }
+
+      // 流動比率フィルター（倍率そのまま比較、データがnull/undefinedの場合は含める）
+      if (
+        filters.currentRatioMin !== null &&
+        stock.流動比率 !== null &&
+        stock.流動比率 !== undefined &&
+        typeof stock.流動比率 === "number" &&
+        stock.流動比率 < filters.currentRatioMin
+      ) {
+        return false;
+      }
+      if (
+        filters.currentRatioMax !== null &&
+        stock.流動比率 !== null &&
+        stock.流動比率 !== undefined &&
+        typeof stock.流動比率 === "number" &&
+        stock.流動比率 > filters.currentRatioMax
+      ) {
+        return false;
+      }
+
+      // NCAV比率フィルター（%）（データがnull/undefinedの場合は含める）
+      if (
+        filters.ncavRatioMin !== null &&
+        stock.NCAV比率 !== null &&
+        stock.NCAV比率 !== undefined &&
+        typeof stock.NCAV比率 === "number" &&
+        stock.NCAV比率 < filters.ncavRatioMin / 100
+      ) {
+        return false;
+      }
+      if (
+        filters.ncavRatioMax !== null &&
+        stock.NCAV比率 !== null &&
+        stock.NCAV比率 !== undefined &&
+        typeof stock.NCAV比率 === "number" &&
+        stock.NCAV比率 > filters.ncavRatioMax / 100
+      ) {
+        return false;
+      }
+
       return true;
     });
 
@@ -731,6 +832,13 @@ export const useFilters = (data: StockData[]) => {
     setFilters(initialFilters);
     // URLパラメータもクリア
     navigate(location.pathname, { replace: true });
+  };
+
+  // グレアムの古典的スクリーニング基準を一括適用
+  const applyGrahamPreset = () => {
+    const newFilters = { ...filters, ...GRAHAM_PRESET };
+    setFilters(newFilters);
+    updateUrlWithFilters(newFilters);
   };
 
   const shareFilters = () => {
@@ -829,6 +937,7 @@ export const useFilters = (data: StockData[]) => {
     availablePrefectures,
     updateFilter,
     clearFilters,
+    applyGrahamPreset,
     handleSort,
     shareFilters,
     copyShareUrl,

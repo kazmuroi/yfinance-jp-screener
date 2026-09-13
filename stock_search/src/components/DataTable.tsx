@@ -90,6 +90,7 @@ export const DataTable: FC<DataTableProps> = ({
       "投資有価証券",
       "ネットキャッシュ",
       "ネットキャッシュ（流動資産-負債）",
+      "NCAV(グレアム式)",
     ];
     return currencyFields.includes(String(key));
   };
@@ -114,6 +115,9 @@ export const DataTable: FC<DataTableProps> = ({
         let format = "string";
         if (col.key === "銘柄コード") {
           format = "string";
+        } else if (col.key === "流動比率") {
+          // 「流動比率」は「率」を含むが百分率ではなく倍率として表示する
+          format = "decimal";
         } else if (
           String(col.key).includes("率") ||
           String(col.key).includes("ROE") ||

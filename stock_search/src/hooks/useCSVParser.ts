@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Papa from "papaparse";
 import type { StockData } from "../types/stock";
+import { enrichWithGrahamMetrics } from "../utils/grahamMetrics";
 
 interface CSVFile {
   name: string;
@@ -79,7 +80,7 @@ export const useCSVParser = (file: CSVFile | null) => {
             return processedRow as StockData;
           });
 
-          setData(stockData);
+          setData(enrichWithGrahamMetrics(stockData));
         },
         error: (error: Error) => {
           throw new Error(`CSV解析エラー: ${error.message}`);

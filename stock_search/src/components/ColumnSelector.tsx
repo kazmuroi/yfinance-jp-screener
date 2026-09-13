@@ -6,7 +6,13 @@ export interface ColumnConfig {
   key: string;
   label: string;
   visible: boolean;
-  category: "basic" | "valuation" | "performance" | "balance" | "cash";
+  category:
+    | "basic"
+    | "valuation"
+    | "performance"
+    | "balance"
+    | "cash"
+    | "graham";
   essential?: boolean; // 必須項目（非表示にできない）
 }
 
@@ -22,6 +28,7 @@ const categoryLabels: Record<string, string> = {
   performance: "📈 業績・収益性",
   balance: "🏦 バランスシート",
   cash: "💰 キャッシュ関連",
+  graham: "🛡️ グレアム式指標",
 };
 
 export const ColumnSelector: FC<ColumnSelectorProps> = ({

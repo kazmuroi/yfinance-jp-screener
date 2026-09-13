@@ -34,6 +34,17 @@ export interface StockData {
   投資有価証券?: number | null;
   "ネットキャッシュ（流動資産-負債）"?: number | null;
   ネットキャッシュ比率?: number | null;
+
+  // グレアム式 Margin of Safety 指標（CSV由来ではなくフロントエンドで計算する派生列）
+  推定株価?: number | null; // PER(過去12ヶ月) × EPS(過去12ヶ月)
+  "一株純資産(BPS)"?: number | null; // 推定株価 / PBR
+  グレアム数?: number | null; // sqrt(22.5 × EPS × BPS)
+  "安全余裕率(グレアム数)"?: number | null; // (グレアム数 - 推定株価) / グレアム数（小数）
+  "PER×PBR"?: number | null; // グレアムの複合バリュエーション基準（22.5以下が目安）
+  "NCAV(グレアム式)"?: number | null; // 流動資産 - 負債（投資有価証券は加味しない）
+  NCAV比率?: number | null; // NCAV(グレアム式) / 時価総額（小数、1.5=150%）
+  流動比率?: number | null; // 流動資産 / 流動負債（倍率）
+
   _source_file?: string;
   _row_index?: number;
   [key: string]: string | number | null | undefined; // Allow additional dynamic properties
@@ -100,6 +111,16 @@ export interface SearchFilters {
   netCashMax: number | null;
   netCashRatioMin: number | null; // ネットキャッシュ比率
   netCashRatioMax: number | null;
+
+  // グレアム式 Margin of Safety フィルタ
+  grahamMarginOfSafetyMin: number | null; // 安全余裕率(グレアム数)（%）
+  grahamMarginOfSafetyMax: number | null;
+  perPbrMin: number | null; // PER×PBR（グレアムの複合バリュエーション基準）
+  perPbrMax: number | null;
+  currentRatioMin: number | null; // 流動比率（倍）
+  currentRatioMax: number | null;
+  ncavRatioMin: number | null; // NCAV比率（%）
+  ncavRatioMax: number | null;
 }
 
 export interface SortConfig {

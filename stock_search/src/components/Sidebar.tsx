@@ -34,6 +34,8 @@ interface SidebarProps {
     value: string | number | string[] | null
   ) => void;
   onClearFilters: () => void;
+  /** グレアムの古典的スクリーニング基準を一括適用 */
+  onApplyGrahamPreset?: () => void;
   availableIndustries: string[];
   availableMarkets: string[];
   availablePrefectures: string[];
@@ -106,6 +108,7 @@ export const Sidebar = ({
   filters,
   onFilterChange,
   onClearFilters,
+  onApplyGrahamPreset,
   availableIndustries,
   availableMarkets,
   availablePrefectures,
@@ -589,6 +592,58 @@ export const Sidebar = ({
                 unit="%"
                 minKey="netCashRatioMin"
                 maxKey="netCashRatioMax"
+                filters={filters}
+                onFilterChange={onFilterChange}
+              />
+            </div>
+          </details>
+
+          {/* グレアム式バリュー指標 */}
+          <details className="group border-b border-slate-100 pb-2">
+            <summary className="flex items-center justify-between py-2 cursor-pointer">
+              <span className="text-xs font-bold text-slate-700">
+                🛡️ グレアム式バリュー指標
+              </span>
+              <MdExpandMore className="text-sm text-slate-400 group-open:rotate-180 transition-transform" />
+            </summary>
+            <div className="pt-2 space-y-4">
+              {onApplyGrahamPreset && (
+                <button
+                  type="button"
+                  className="w-full text-[11px] font-bold text-[var(--primary)] border border-[var(--primary)] rounded py-1.5 hover:bg-indigo-50 transition-colors"
+                  onClick={onApplyGrahamPreset}
+                >
+                  グレアムの基準を適用
+                </button>
+              )}
+              <NumRange
+                label="安全余裕率(グレアム数)"
+                unit="%"
+                minKey="grahamMarginOfSafetyMin"
+                maxKey="grahamMarginOfSafetyMax"
+                filters={filters}
+                onFilterChange={onFilterChange}
+              />
+              <NumRange
+                label="PER×PBR"
+                minKey="perPbrMin"
+                maxKey="perPbrMax"
+                filters={filters}
+                onFilterChange={onFilterChange}
+              />
+              <NumRange
+                label="流動比率"
+                unit="倍"
+                minKey="currentRatioMin"
+                maxKey="currentRatioMax"
+                filters={filters}
+                onFilterChange={onFilterChange}
+              />
+              <NumRange
+                label="NCAV比率"
+                unit="%"
+                minKey="ncavRatioMin"
+                maxKey="ncavRatioMax"
                 filters={filters}
                 onFilterChange={onFilterChange}
               />

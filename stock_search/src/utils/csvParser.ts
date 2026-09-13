@@ -2,6 +2,7 @@ import Papa from "papaparse";
 import type { StockData } from "../types/stock";
 import { CSV_PARSER_CONFIG, CSV_NUMERIC_FIELDS } from "../constants/csv";
 import { CURRENCY_FORMAT, PERCENTAGE_FORMAT } from "../constants/formatting";
+import { enrichWithGrahamMetrics } from "./grahamMetrics";
 
 /**
  * ティッカーシンボルから市場タイプを判定
@@ -77,8 +78,11 @@ export const parseCSVFile = (file: File): Promise<StockData[]> => {
             return row;
           });
           
-          resolve(processedData.filter((row) => row.会社名 && (row.銘柄コード || row.コード)));
-        } catch (error) {
+          const validData = processedData.filter(
+            (row) => row.会社名 && (row.銘柄コード || row.コード)
+          );
+          resolve(enrichWithGrahamMetrics(validData));
+        } catch {
           reject(new Error("データの変換中にエラーが発生しました"));
         }
       },

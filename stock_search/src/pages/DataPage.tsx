@@ -103,6 +103,7 @@ export const DataPage = () => {
     availablePrefectures,
     updateFilter,
     clearFilters,
+    applyGrahamPreset,
     handleSort,
   } = useFilters(data);
   const { favoriteCodesSet, toggle: onToggleFavorite } = useFavorites();
@@ -188,6 +189,7 @@ export const DataPage = () => {
     filters,
     onFilterChange: updateFilter,
     onClearFilters: clearFilters,
+    onApplyGrahamPreset: applyGrahamPreset,
     availableIndustries: selectedFile ? availableIndustries : [],
     availableMarkets: selectedFile ? availableMarkets : [],
     availablePrefectures: selectedFile ? availablePrefectures : [],

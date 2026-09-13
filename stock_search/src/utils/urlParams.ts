@@ -73,6 +73,14 @@ export const filtersToUrlParams = (filters: SearchFilters): URLSearchParams => {
     { key: "netCashMax", param: "ncMax" },
     { key: "netCashRatioMin", param: "ncrMin" },
     { key: "netCashRatioMax", param: "ncrMax" },
+    { key: "grahamMarginOfSafetyMin", param: "gmosMin" },
+    { key: "grahamMarginOfSafetyMax", param: "gmosMax" },
+    { key: "perPbrMin", param: "ppMin" },
+    { key: "perPbrMax", param: "ppMax" },
+    { key: "currentRatioMin", param: "crMin" },
+    { key: "currentRatioMax", param: "crMax" },
+    { key: "ncavRatioMin", param: "ncavMin" },
+    { key: "ncavRatioMax", param: "ncavMax" },
   ];
 
   numericFilters.forEach(({ key, param }) => {
@@ -171,6 +179,14 @@ export const urlParamsToFilters = (
     { param: "ncMax", key: "netCashMax" },
     { param: "ncrMin", key: "netCashRatioMin" },
     { param: "ncrMax", key: "netCashRatioMax" },
+    { param: "gmosMin", key: "grahamMarginOfSafetyMin" },
+    { param: "gmosMax", key: "grahamMarginOfSafetyMax" },
+    { param: "ppMin", key: "perPbrMin" },
+    { param: "ppMax", key: "perPbrMax" },
+    { param: "crMin", key: "currentRatioMin" },
+    { param: "crMax", key: "currentRatioMax" },
+    { param: "ncavMin", key: "ncavRatioMin" },
+    { param: "ncavMax", key: "ncavRatioMax" },
   ];
 
   numericMappings.forEach(({ param, key }) => {

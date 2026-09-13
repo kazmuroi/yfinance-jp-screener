@@ -63,6 +63,19 @@ export const getDefaultColumns = (
       category: "cash",
     },
     ネットキャッシュ比率: { label: "ネットキャッシュ比率", category: "cash" },
+
+    // グレアム式バリュー指標
+    推定株価: { label: "推定株価", category: "graham" },
+    "一株純資産(BPS)": { label: "一株純資産(BPS)", category: "graham" },
+    グレアム数: { label: "グレアム数", category: "graham" },
+    "安全余裕率(グレアム数)": {
+      label: "安全余裕率(グレアム数)",
+      category: "graham",
+    },
+    "PER×PBR": { label: "PER×PBR", category: "graham" },
+    "NCAV(グレアム式)": { label: "NCAV(グレアム式)", category: "graham" },
+    NCAV比率: { label: "NCAV比率", category: "graham" },
+    流動比率: { label: "流動比率", category: "graham" },
   };
 
   return availableColumns.map((col) => ({
